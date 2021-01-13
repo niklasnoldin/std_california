@@ -1,28 +1,40 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
-  </div>
+  <main>
+    <h1>Sexually transmitted deseases in California</h1>
+    <p>
+      These data contain case counts and rates for sexually transmitted diseases
+      (chlamydia, gonorrhea, and early syphilis which includes primary,
+      secondary, and early latent syphilis) reported for California residents,
+      by disease, county, year, and sex.
+    </p>
+    <v-map :data="data" />
+    <v-line :data="data" />
+  </main>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+import VMap from "./components/Map";
+import VLine from "./components/Line";
+import * as d3 from "d3";
 export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
-}
+  components: { VMap, VLine },
+  methods: {
+    async loadData() {
+      this.data = await d3.csv("./dataset.csv");
+      this.data.forEach(function (d) {
+        d.Cases = +d.Cases;
+        d.Year = +d.Year;
+        d.Population = +d.Population;
+      });
+    },
+  },
+  mounted() {
+    this.loadData();
+  },
+  data() {
+    return {
+      data: [],
+    };
+  },
+};
 </script>
-
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
-</style>
