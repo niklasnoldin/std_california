@@ -1,5 +1,8 @@
-# std_california
+# STDs in California
 
+This dashboard visualizes data from 2001 to 2018. The data contains case counts and rates for sexually transmitted diseases (chlamydia, gonorrhea, and early syphilis which includes primary, secondary, and early latent syphilis) reported for California residents, by disease, county, year, and sex.
+
+---
 ## Project setup
 ```
 npm install
@@ -20,5 +23,3 @@ npm run build
 npm run lint
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
