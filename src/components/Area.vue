@@ -1,9 +1,9 @@
 <template>
   <div>
-    <div id="line"></div>
+    <div id="area"></div>
     <div class="info">
-      <h2>Total Number of Cases per Year</h2>
-      <p>divided in STDs</p>
+      <h2>Cases over the Years</h2>
+      <p>divided in female and male</p>
     </div>
   </div>
 </template>

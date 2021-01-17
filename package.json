@@ -10,6 +10,8 @@
   "dependencies": {
     "core-js": "^3.6.5",
     "d3": "^6.3.1",
+    "sass": "^1.32.4",
+    "sass-loader": "^10.1.1",
     "topojson": "^3.0.2",
     "vue": "^2.6.11"
   },
