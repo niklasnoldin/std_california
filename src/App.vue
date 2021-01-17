@@ -94,6 +94,11 @@ export default {
     margin: 0 0 15px 0;
   }
   $lightgrey: #ededed;
+  $women: #B95F89;
+  $men:#545677;
+  $std1: #F09D51;
+  $std2:#636B61;
+  $std3: #77625C;
 //-----------------------
   .header {
     display: flex;
@@ -135,12 +140,29 @@ export default {
 
     .map-container {
       padding: 35px 30px 0 35px;
+
+      #map {
+        display: flex;
+        justify-content: center;
+      }
     }
     .line-container {
+      #line {
+        display: flex;
+        justify-content: center;
+      }
     }
     .bar-container {
+      #bar {
+        display: flex;
+        justify-content: center;
+      }
     }
     .area-container {
+      #area {
+        display: flex;
+        justify-content: center;
+      }
     }
   }
 </style>
