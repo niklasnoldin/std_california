@@ -14,7 +14,10 @@
       <h3>{{ current.name }}</h3>
       <p class="population">Average population: {{ current.pop | decimal }}</p>
 
-      <h4>{{ current.perMil / 1000000 * 100 | decimal }} cases <span class="footnote">- per 100 residents</span></h4>
+      <h4>
+        {{ ((current.perMil / 1000000) * 100) | decimal }} cases
+        <span class="footnote">- per 100 residents</span>
+      </h4>
 
       <p>Total cases: {{ current.total | decimal }}</p>
       <ul>
@@ -59,7 +62,10 @@ export default {
         );
         perCounty[county] = {
           total: filteredData.reduce((total, row) => total + row.Cases, 0),
-          pop: filteredData.reduce((total, row) => total + row.Population / 18.0 / 3, 0),
+          pop: filteredData.reduce(
+            (total, row) => total + row.Population / 18.0 / 3,
+            0
+          ),
           clam: filteredData
             .filter((row) => row.Disease === "Chlamydia")
             .reduce((total, row) => total + row.Cases, 0),
@@ -149,52 +155,52 @@ export default {
         .attr("height", this.height);
     },
   },
-  mounted() {
-    this.init();
+  async mounted() {
+    await this.init();
   },
 };
 </script>
 
 <style lang="scss">
-  $lightgrey: #ededed;
-  //-----------------------
+$lightgrey: #ededed;
+//-----------------------
 
-  .tooltip {
-    position: absolute;
-    background: white;
-    transition: all 100ms;
-    pointer-events: none;
-    border-radius: 20px;
-    padding: 20px;
-    background-color: $lightgrey;
-    box-shadow: none;
+.tooltip {
+  position: absolute;
+  background: white;
+  transition: all 100ms;
+  pointer-events: none;
+  border-radius: 20px;
+  padding: 20px;
+  background-color: $lightgrey;
+  box-shadow: none;
 
-    p, li {
-      margin-bottom: 10px;
-    }
-    h3 {
-      margin: 0 0 5px 0;
-    }
-    h4 {
-      margin: 20px 0;
-    }
-    ul {
-      font-size: 14px;
-      padding-left: 30px;
+  p,
+  li {
+    margin-bottom: 10px;
+  }
+  h3 {
+    margin: 0 0 5px 0;
+  }
+  h4 {
+    margin: 20px 0;
+  }
+  ul {
+    font-size: 14px;
+    padding-left: 30px;
 
-      li:last-of-type{
-        margin: 0;
-      }
-    }
-    .footnote {
-      margin: 0 0 20px;
-      font-size: 12px;
-      padding-left: 2px;
-    }
-
-    .population {
-      font-size: 14px;
+    li:last-of-type {
+      margin: 0;
     }
   }
+  .footnote {
+    margin: 0 0 20px;
+    font-size: 12px;
+    padding-left: 2px;
+  }
 
+  .population {
+    font-size: 14px;
+  }
+}
 </style>
