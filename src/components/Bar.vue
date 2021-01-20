@@ -1,6 +1,44 @@
 <template>
   <div>
-    <div id="bar"></div>
+    {{ text }}
+    <svg width="500" height="500" viewBox="0 0 500 500" id="bar">
+      <g transform="translate(60, 20)">
+        <rect
+          v-for="(disease, idx) in uniqueDiseases"
+          :key="'female_' + disease"
+          v-bind="{
+            height: scaleY(0) - femaleHeights[idx],
+            width: 100,
+            y: femaleHeights[idx],
+            x: scaleX(disease) - 50,
+          }"
+          fill="#BFD04D"
+          @mousemove="
+            text = `${disease}, Female, ${femalePerDisease[
+              idx
+            ].total.toLocaleString()}`
+          "
+        ></rect>
+        <rect
+          v-for="(disease, idx) in uniqueDiseases"
+          :key="'male_' + disease"
+          v-bind="{
+            height: scaleY(0) - maleHeights[idx],
+            width: 100,
+            y: maleHeights[idx] - (scaleY(0) - femaleHeights[idx]),
+            x: scaleX(disease) - 50,
+          }"
+          @mousemove="
+            text = `${disease}, Male, ${malePerDisease[
+              idx
+            ].total.toLocaleString()}`
+          "
+          fill="#084D71"
+        ></rect>
+      </g>
+      <g id="left-axis-bars" transform="translate(60, 20)"></g>
+      <g id="bottom-axis-bars" transform="translate(60, 420)"></g>
+    </svg>
     <div class="info">
       <h2>Total Number of Cases per STD</h2>
       <p>over a period of 18 years (2001 - 2018)</p>
@@ -14,85 +52,90 @@ export default {
   props: { data: { type: Array, required: true } },
   data() {
     return {
-      svg: null,
-      width: 500,
-      height: 500,
-      xScale: null,
-      yScale: null,
+      scaleY: null,
+      scaleX: null,
+      text: "",
     };
   },
   computed: {
-    uniqueYears() {
-      return [...new Set(this.data.flatMap(({ Year }) => Year))];
+    femaleHeights() {
+      return this.femalePerDisease.map(({ total }) => this.scaleY(total));
     },
-    totalPerYear() {
-      return [...this.uniqueYears]
-        .map((year) => ({
-          year,
-          total: this.data
-            .filter((row) => row.Year === year && row.Sex === "Total")
-            .reduce((total, current) => total + current.Cases, 0),
-        }))
-        .sort((a, b) => a.year - b.year);
+    maleHeights() {
+      return this.malePerDisease.map(({ total }) => this.scaleY(total));
+    },
+    uniqueYears() {
+      return [...new Set(this.data.map(({ Year }) => Year))];
+    },
+    uniqueDiseases() {
+      return [...new Set(this.data.map(({ Disease }) => Disease))];
+    },
+    totalPerDisease() {
+      return [...this.uniqueDiseases].map((disease) => ({
+        disease,
+        total: this.data
+          .filter(
+            (row) =>
+              row.Disease === disease &&
+              row.County === "California" &&
+              row.Sex === "Total"
+          )
+          .reduce((total, current) => total + parseInt(current.Cases), 0),
+      }));
+    },
+    malePerDisease() {
+      return [...this.uniqueDiseases].map((disease) => ({
+        disease,
+        total: this.data
+          .filter(
+            (row) =>
+              row.Disease === disease &&
+              row.County === "California" &&
+              row.Sex === "Male"
+          )
+          .reduce((total, current) => total + parseInt(current.Cases), 0),
+      }));
+    },
+    femalePerDisease() {
+      return [...this.uniqueDiseases].map((disease) => ({
+        disease,
+        total: this.data
+          .filter(
+            (row) =>
+              row.Disease === disease &&
+              row.County === "California" &&
+              row.Sex === "Female"
+          )
+          .reduce((total, current) => total + parseInt(current.Cases), 0),
+      }));
     },
   },
   watch: {
-    data() {
-      this.xScale = d3.scaleLinear().domain([2001, 2018]).range([0, 400]);
-      this.yScale = d3
-        .scaleLinear()
-        .domain([0, d3.max(this.totalPerYear, (d) => d.total)])
-        .range([0, 500]);
-
-      const xAxis = d3.axisBottom().scale(this.xScale);
-
-      const yAxis = d3.axisLeft().scale(this.yScale).ticks(10);
-
-      this.svg
-        .append("g")
-        .attr("class", "x axis")
-        .attr("transform", `translate(20, ${this.height - 20})`)
-        .call(xAxis)
-        .selectAll("text")
-        .style("text-anchor", "end")
-        .attr("dx", "-.8em")
-        .attr("dy", "-.55em")
-        .attr("transform", "rotate(-90)");
-
-      this.svg
-        .append("g")
-        .attr("class", "y axis")
-        .call(yAxis)
-        .append("text")
-        .attr("transform", "rotate(-90)")
-        .attr("y", 6)
-        .attr("dy", ".71em")
-        .style("text-anchor", "end")
-        .text("Value ($)");
-      this.svg
-        .append("g")
-        .selectAll("bar")
-        .data(this.totalPerYear)
-        .enter()
-        .append("rect")
-        .attr("x", (d) => this.xScale(d.year))
-        .attr("y", (d) => 480 - this.yScale(d.total))
-        .attr("height", (d) => this.yScale(d.total))
-        .attr("width", 7);
+    totalPerDisease: {
+      handler() {
+        this.initScales();
+        this.renderAxis();
+      },
+      immediate: true,
     },
   },
   methods: {
-    init() {
-      this.svg = d3
-        .select("#bar")
-        .append("svg")
-        .attr("viewport", `0 0 ${this.width} ${this.height}`)
-        .attr("width", this.width)
-        .attr("height", this.height);
+    initScales() {
+      this.scaleX = d3
+        .scaleOrdinal()
+        .domain(["", ...this.uniqueDiseases, " "])
+        .range([0, 75, 200, 325, 400]);
+      this.scaleY = d3
+        .scaleLinear()
+        .domain([0, d3.max(this.totalPerDisease, (d) => d.total)])
+        .range([400, 0]);
     },
-  },
-  mounted() {
-    this.init();
+    renderAxis() {
+      let axisX = d3.axisBottom(this.scaleX);
+      let axisY = d3.axisLeft(this.scaleY);
+      d3.select("#left-axis-bars").call(axisY);
+      d3.select("#bottom-axis-bars").call(axisX);
+    },
   },
 };
 </script>
