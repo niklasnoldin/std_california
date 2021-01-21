@@ -1,5 +1,6 @@
 <template>
   <div>
+    <h3>{{ highlightedDisease || "All STDs combined"}} </h3>
     <div id="area"  @mouseout="current = null">
       <svg viewBox="20 60 650 160" width="900" height="480">
         <g transform="translate(50, 20)">
@@ -22,7 +23,6 @@
         <g id="left-axis-area" transform="translate(50,20)"></g>
       </svg>
     </div>
-    <h3>{{ highlightedDisease || "All STDs combined"}} </h3>
     <div
       id="map_tooltip"
       class="tooltip"

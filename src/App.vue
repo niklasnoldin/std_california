@@ -192,11 +192,19 @@ $std3: #4dcdd0;
       font-family: "silkamedium", sans-serif;
       font-size: 18px;
 
+      &:hover {
+        cursor: pointer;
+      }
+
       input[type="radio"] {
         width: 20px;
         height: 20px;
         margin-right: 10px;
         margin-top: 0;
+
+        &:hover {
+          cursor: pointer;
+        }
       }
     }
   }
@@ -273,6 +281,7 @@ section {
 
     > h3 {
       text-align: center;
+      margin: 15px 0;
     }
 
     .tooltip h3 {
