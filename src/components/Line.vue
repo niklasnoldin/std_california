@@ -6,7 +6,11 @@
           <g>
             <path
               @mousemove="handleMouseOver"
-              stroke="#f09d51"
+              :stroke="
+                highlightedDisease && highlightedDisease !== 'Chlamydia'
+                  ? 'lightgray'
+                  : '#f09d51'
+              "
               :fill="
                 highlightedDisease && highlightedDisease === 'Chlamydia'
                   ? '#f09d51'
@@ -22,7 +26,11 @@
             ></path>
             <path
               @mousemove="handleMouseOver"
-              stroke="#de74a5"
+              :stroke="
+                highlightedDisease && highlightedDisease !== 'Gonorrhea'
+                  ? 'lightgray'
+                  : '#de74a5'
+              "
               :fill="
                 highlightedDisease && highlightedDisease === 'Gonorrhea'
                   ? '#de74a5'
@@ -38,7 +46,11 @@
             ></path>
             <path
               @mousemove="handleMouseOver"
-              stroke="#4dcdd0"
+              :stroke="
+                highlightedDisease && highlightedDisease !== 'Early Syphilis'
+                  ? 'lightgray'
+                  : '#4dcdd0'
+              "
               :fill="
                 highlightedDisease && highlightedDisease === 'Early Syphilis'
                   ? '#4dcdd0'
