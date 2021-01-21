@@ -42,12 +42,22 @@
 
 
     <section>
-      <v-map :data="data" class="map-container" />
-      <v-bar :data="data" class="bar-container" />
+      <v-map 
+        :data="data" 
+        class="map-container"
+        :highlightedDisease="disease"
+      />
+      <v-bar 
+        :data="data" 
+        class="bar-container"
+        :highlightedDisease="disease"
+        @diseaseSelected="disease=$event"
+      />
       <v-line
         :data="data"
         class="line-container"
         :highlightedDisease="disease"
+        @diseaseSelected="disease=$event"
       />
       <v-area
         :data="data"
@@ -260,6 +270,12 @@ section {
     #line {
       display: flex;
       justify-content: center;
+
+      path {
+        &:hover {
+          cursor: pointer;
+        }
+      }
     }
   }
 
@@ -271,6 +287,12 @@ section {
     #bar {
       display: flex;
       justify-content: center;
+
+      rect {
+        &:hover {
+          cursor: pointer;
+        }
+      }
     }
   }
 

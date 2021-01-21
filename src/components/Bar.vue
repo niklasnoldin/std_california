@@ -6,16 +6,19 @@
           <rect
             v-for="(disease, idx) in uniqueDiseases"
             :key="'female_' + disease"
-            :data-text="`${disease}: ${femalePerDisease[idx].total.toLocaleString()}`"
             data-name="Female"
             v-bind="{
               height: scaleY(0) - femaleHeights[idx],
               width: 100,
               y: femaleHeights[idx],
               x: scaleX(disease) - 50,
+              fill: highlightedDisease && highlightedDisease !== disease
+                  ? 'lightgray'
+                  : '#BFD04D',
+              'data-text': `${disease}: ${femalePerDisease[idx].total.toLocaleString()}`,
             }"
-            fill="#BFD04D"
             @mousemove="handleMouseOver"
+            @click="$emit('diseaseSelected', disease)"
           ></rect>
           <rect
             v-for="(disease, idx) in uniqueDiseases"
@@ -29,7 +32,12 @@
               x: scaleX(disease) - 50,
             }"
             @mousemove="handleMouseOver"
-            fill="#084D71"
+            :fill="
+                highlightedDisease && highlightedDisease !== disease
+                  ? 'darkgray'
+                  : '#084D71'
+            "
+            @click="$emit('diseaseSelected', disease)"
           ></rect>
         </g>
         <g id="left-axis-bars" transform="translate(60, 20)"></g>
@@ -48,6 +56,7 @@
     <div class="info">
       <h2>Total Number of Cases per STD</h2>
       <p>over a period of 18 years (2001 - 2018)</p>
+      <p>and divided in female and male</p>
     </div>
   </div>
 </template>
@@ -55,7 +64,10 @@
 <script>
 import * as d3 from "d3";
 export default {
-  props: { data: { type: Array, required: true } },
+  props: { 
+    data: { type: Array, required: true },
+    highlightedDisease: { type: String }  
+  },
   data() {
     return {
       scaleY: null,

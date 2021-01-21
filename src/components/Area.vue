@@ -44,7 +44,7 @@ import * as d3 from "d3";
 export default {
   props: {
     data: { type: Array, required: true },
-    highlightedDisease: {type: String}
+    highlightedDisease: { type: String }
   },
   data() {
     return {

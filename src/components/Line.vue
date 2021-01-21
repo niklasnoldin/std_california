@@ -8,7 +8,7 @@
               @mousemove="handleMouseOver"
               :stroke="
                 highlightedDisease && highlightedDisease !== 'Chlamydia'
-                  ? 'lightgray'
+                  ? '#0002'
                   : '#f09d51'
               "
               :fill="
@@ -16,19 +16,20 @@
                   ? '#f09d51'
                   : 'none'
               "
-              stroke-width="2"
+              stroke-width="3"
               :d="
                 highlightedDisease && highlightedDisease === 'Chlamydia'
                   ? area(clamData)
                   : line(clamData)
               "
               data-disease="Chlamydia"
+              @click="$emit('diseaseSelected', 'Chlamydia')"
             ></path>
             <path
               @mousemove="handleMouseOver"
               :stroke="
                 highlightedDisease && highlightedDisease !== 'Gonorrhea'
-                  ? 'lightgray'
+                  ? '#0002'
                   : '#de74a5'
               "
               :fill="
@@ -36,19 +37,20 @@
                   ? '#de74a5'
                   : 'none'
               "
-              stroke-width="2"
+              stroke-width="3"
               :d="
                 highlightedDisease && highlightedDisease === 'Gonorrhea'
                   ? area(gonData)
                   : line(gonData)
               "
               data-disease="Gonorrhea"
+              @click="$emit('diseaseSelected', 'Gonorrhea')"
             ></path>
             <path
               @mousemove="handleMouseOver"
               :stroke="
                 highlightedDisease && highlightedDisease !== 'Early Syphilis'
-                  ? 'lightgray'
+                  ? '#0002'
                   : '#4dcdd0'
               "
               :fill="
@@ -56,25 +58,27 @@
                   ? '#4dcdd0'
                   : 'none'
               "
-              stroke-width="2"
+              stroke-width="3"
               :d="
                 highlightedDisease && highlightedDisease === 'Early Syphilis'
                   ? area(syphData)
                   : line(syphData)
               "
               data-disease="Early Syphilis"
+              @click="$emit('diseaseSelected', 'Early Syphilis')"
             ></path>
             <path
               @mousemove="handleMouseOver"
               data-disease="Total"
               :stroke="
                 highlightedDisease && highlightedDisease !== ''
-                  ? 'lightgray'
+                  ? '#0002'
                   : 'black'
               "
               fill="none"
-              stroke-width="2"
+              stroke-width="3"
               :d="line(totalData)"
+              @click="$emit('diseaseSelected', '')"
             ></path>
           </g>
         </g>
@@ -103,7 +107,7 @@ import * as d3 from "d3";
 export default {
   props: {
     data: { type: Array, required: true },
-    highlightedDisease: String,
+    highlightedDisease: { type: String },
   },
   data() {
     return {
