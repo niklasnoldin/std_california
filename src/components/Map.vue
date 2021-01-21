@@ -136,7 +136,7 @@ export default {
         })
         .attr("stroke", "white")
         .attr("stroke-width", 0.5)
-        .on("mouseover mousemove", this.handleMouseOver);
+        .on("mousemove", this.handleMouseOver);
       d3.select("g").on("mouseout", this.handleMouseOut);
     },
   },
@@ -173,7 +173,7 @@ export default {
       this.svg = d3
         .select("#map")
         .append("svg")
-        .attr("viewport", this.viewport)
+        .attr("viewBox", this.viewport)
         .attr("width", this.width)
         .attr("height", this.height);
     },

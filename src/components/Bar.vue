@@ -89,8 +89,8 @@ export default {
       return [...new Set(this.data.map(({ Disease }) => Disease))];
     },
     totalPerDisease() {
-      return [...this.uniqueDiseases].map((disease) => ({
-        disease,
+      return this.uniqueDiseases.map((disease) => ({
+        disease: disease,
         total: this.data
           .filter(
             (row) =>
@@ -98,11 +98,11 @@ export default {
               row.County === "California" &&
               row.Sex === "Total"
           )
-          .reduce((total, current) => total + parseInt(current.Cases), 0),
+          .reduce((total, current) => total + current.Cases, 0),
       }));
     },
     malePerDisease() {
-      return [...this.uniqueDiseases].map((disease) => ({
+      return this.uniqueDiseases.map((disease) => ({
         disease,
         total: this.data
           .filter(
@@ -111,11 +111,11 @@ export default {
               row.County === "California" &&
               row.Sex === "Male"
           )
-          .reduce((total, current) => total + parseInt(current.Cases), 0),
+          .reduce((total, current) => total + current.Cases, 0),
       }));
     },
     femalePerDisease() {
-      return [...this.uniqueDiseases].map((disease) => ({
+      return this.uniqueDiseases.map((disease) => ({
         disease,
         total: this.data
           .filter(
@@ -124,7 +124,7 @@ export default {
               row.County === "California" &&
               row.Sex === "Female"
           )
-          .reduce((total, current) => total + parseInt(current.Cases), 0),
+          .reduce((total, current) => total + current.Cases, 0),
       }));
     },
   },
@@ -165,6 +165,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped>
-</style>

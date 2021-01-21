@@ -174,17 +174,17 @@ $std3: #4dcdd0;
 .header {
   position: fixed;
   background-color: #fff;
-  width: 95%;
+  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 10px;
-  padding: 0 50px;
   box-shadow: 0px 0px 20px $lightgrey;
 
 .logo {
     display: flex;
     align-items: center;
+    padding-left: 50px;
 
     img {
       width: 80px;
@@ -194,6 +194,7 @@ $std3: #4dcdd0;
 
   .std-filter {
     display: flex;
+    padding-right: 50px;
 
     label {
       display: flex;
