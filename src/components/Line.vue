@@ -1,17 +1,15 @@
 <template>
   <div>
-    <div class="info" @mouseout="current = null">
-      <h2>Total Number of Cases per Year</h2>
-      <p>divided in STDs</p>
-      <svg id="line" viewBox="0 0 500 500" width="500" height="500">
+    <div id="line" @mouseout="current = null">
+       <svg viewBox="-10 30 700 260" width="900" height="480">
         <g transform="translate(50, 20)">
           <g>
             <path
               @mousemove="handleMouseOver"
-              stroke="#0f0"
+              stroke="#f09d51"
               :fill="
                 highlightedDisease && highlightedDisease === 'Chlamydia'
-                  ? '#0f03'
+                  ? '#f09d51'
                   : 'none'
               "
               stroke-width="2"
@@ -24,26 +22,10 @@
             ></path>
             <path
               @mousemove="handleMouseOver"
-              stroke="#f00"
-              :fill="
-                highlightedDisease && highlightedDisease === 'Early Syphilis'
-                  ? '#f003'
-                  : 'none'
-              "
-              stroke-width="2"
-              :d="
-                highlightedDisease && highlightedDisease === 'Early Syphilis'
-                  ? area(syphData)
-                  : line(syphData)
-              "
-              data-disease="Early Syphilis"
-            ></path>
-            <path
-              @mousemove="handleMouseOver"
-              stroke="#00f"
+              stroke="#de74a5"
               :fill="
                 highlightedDisease && highlightedDisease === 'Gonorrhea'
-                  ? '#00f3'
+                  ? '#de74a5'
                   : 'none'
               "
               stroke-width="2"
@@ -53,6 +35,22 @@
                   : line(gonData)
               "
               data-disease="Gonorrhea"
+            ></path>
+            <path
+              @mousemove="handleMouseOver"
+              stroke="#4dcdd0"
+              :fill="
+                highlightedDisease && highlightedDisease === 'Early Syphilis'
+                  ? '#4dcdd0'
+                  : 'none'
+              "
+              stroke-width="2"
+              :d="
+                highlightedDisease && highlightedDisease === 'Early Syphilis'
+                  ? area(syphData)
+                  : line(syphData)
+              "
+              data-disease="Early Syphilis"
             ></path>
             <path
               @mousemove="handleMouseOver"
@@ -68,7 +66,7 @@
             ></path>
           </g>
         </g>
-        <g id="bottom-axis" transform="translate(50, 420)"></g>
+        <g id="bottom-axis" transform="translate(50, 270)"></g>
         <g id="left-axis" transform="translate(50,20)"></g>
       </svg>
     </div>
@@ -78,7 +76,11 @@
       v-if="current"
       :style="{ top: current.top, left: current.left }"
     >
-      <span>{{ current.name }}</span>
+      <h3>{{ current.name }}</h3>
+    </div>
+    <div class="info">
+      <h2>Cases over the Years</h2>
+      <p>divided in STDs</p>
     </div>
   </div>
 </template>
@@ -140,12 +142,12 @@ export default {
             return d.Cases;
           }),
         ])
-        .range([400, 0]);
+        .range([250, 0]);
 
       this.scaleX = d3
         .scaleTime()
         .domain(d3.extent(this.totalData, (d) => d3.timeParse("%Y")(d.Year)))
-        .range([0, 400]);
+        .range([0, 600]);
     },
 
     render() {

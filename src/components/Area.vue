@@ -1,68 +1,39 @@
 <template>
   <div>
-    <div class="info" @mouseout="current = null">
-      <h2>Cases over the Years</h2>
-      <p>divided in female and male</p>
-      <svg id="line" viewBox="0 0 500 500" width="500" height="500">
+    <div id="area"  @mouseout="current = null">
+      <svg viewBox="20 60 650 160" width="900" height="480">
         <g transform="translate(50, 20)">
           <g>
             <path
               @mousemove="handleMouseOver"
-              fill="aqua"
+              fill="#084d71"
               data-disease="Male"
               :d="areaMale(totalData)"
             ></path>
             <path
               @mousemove="handleMouseOver"
-              fill="tomato"
+              fill="#bfd04d"
               data-disease="Female"
               :d="areaFemale(totalData)"
             ></path>
           </g>
         </g>
-        <g id="bottom-axis-area" transform="translate(50, 420)"></g>
+        <g id="bottom-axis-area" transform="translate(50, 270)"></g>
         <g id="left-axis-area" transform="translate(50,20)"></g>
       </svg>
     </div>
+    <h3>{{ highlightedDisease || "All STDs combined"}} </h3>
     <div
       id="map_tooltip"
       class="tooltip"
       v-if="current"
       :style="{ top: current.top, left: current.left }"
     >
-      <span>{{ current.name }}</span>
+      <h3>{{ current.name }}</h3>
     </div>
-    <div>
-      <label
-        ><input v-model="disease" type="radio" name="disease" value="" /> All
-      </label>
-      <label
-        ><input
-          v-model="disease"
-          type="radio"
-          name="disease"
-          value="Early Syphilis"
-        />
-        Early Syphilis
-      </label>
-      <label
-        ><input
-          v-model="disease"
-          type="radio"
-          name="disease"
-          value="Chlamydia"
-        />
-        Chlamydia
-      </label>
-      <label
-        ><input
-          v-model="disease"
-          type="radio"
-          name="disease"
-          value="Gonorrhea"
-        />
-        Gonorrhea
-      </label>
+    <div class="info">
+      <h2>Ratio between sexes</h2>
+      <p>divided in female and male</p>
     </div>
   </div>
 </template>
@@ -73,6 +44,7 @@ import * as d3 from "d3";
 export default {
   props: {
     data: { type: Array, required: true },
+    highlightedDisease: {type: String}
   },
   data() {
     return {
@@ -81,7 +53,6 @@ export default {
       areaFemale: null,
       areaMale: null,
       current: null,
-      disease: "",
     };
   },
   methods: {
@@ -117,12 +88,12 @@ export default {
         });
     },
     updateScales() {
-      this.scaleY = d3.scaleLinear().domain([0, 1]).range([400, 0]);
+      this.scaleY = d3.scaleLinear().domain([0, 1]).range([250, 0]);
 
       this.scaleX = d3
         .scaleTime()
         .domain(d3.extent(this.totalData, (d) => d3.timeParse("%Y")(d.Year)))
-        .range([0, 400]);
+        .range([0, 600]);
     },
 
     render() {
@@ -132,9 +103,6 @@ export default {
     },
   },
   watch: {
-    disease(val) {
-      this.$emit("setHighlightDisease", val);
-    },
     totalData: {
       handler() {
         this.render();
@@ -148,7 +116,7 @@ export default {
         (row) =>
           row.County === "California" &&
           (row.Sex === "Male" || row.Sex === "Female") &&
-          (!this.disease || this.disease === row.Disease)
+          (!this.highlightedDisease || this.highlightedDisease === row.Disease)
       );
       return [...new Set(filteredData.map((row) => row.Year))].map((year) => {
         const male = filteredData

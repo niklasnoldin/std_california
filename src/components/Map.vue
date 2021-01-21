@@ -104,7 +104,7 @@ export default {
         .attr("d", this.path())
         .attr("fill", (d) => {
           const casesPer1000 = this.casesPer1000[d.properties.name];
-          return d3.interpolateBlues(
+          return d3.interpolatePurples(
             d3
               .scaleLinear()
               .domain(d3.extent(Object.values(this.casesPer1000)))

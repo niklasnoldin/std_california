@@ -1,9 +1,45 @@
 <template>
   <main>
     <div class="header">
-      <img src="/condom.png" />
-      <h1>STDs in <br />California</h1>
+      <div class="logo">
+        <img src="/condom.png" />
+        <h1>STDs in <br />California</h1>
+      </div>
+
+      <div class="std-filter">
+        <label
+          ><input v-model="disease" type="radio" name="disease" value="" /> All
+        </label>
+        <label
+          ><input
+            v-model="disease"
+            type="radio"
+            name="disease"
+            value="Early Syphilis"
+          />
+          Early Syphilis
+        </label>
+        <label
+          ><input
+            v-model="disease"
+            type="radio"
+            name="disease"
+            value="Chlamydia"
+          />
+          Chlamydia
+        </label>
+        <label
+          ><input
+            v-model="disease"
+            type="radio"
+            name="disease"
+            value="Gonorrhea"
+          />
+          Gonorrhea
+        </label>
+      </div>
     </div>
+
 
     <section>
       <v-map :data="data" class="map-container" />
@@ -11,12 +47,12 @@
       <v-line
         :data="data"
         class="line-container"
-        :highlightedDisease="highlightedDisease"
+        :highlightedDisease="disease"
       />
       <v-area
         :data="data"
         class="area-container"
-        @setHighlightDisease="highlightedDisease = $event"
+        :highlightedDisease="disease"
       />
     </section>
   </main>
@@ -41,7 +77,7 @@ export default {
   data() {
     return {
       data: [],
-      highlightedDisease: "",
+      disease: "",
     };
   },
 };
@@ -102,7 +138,7 @@ span {
   margin: 0;
 }
 h1 {
-  font-size: 36px;
+  font-size: 30px;
 }
 h2,
 h3,
@@ -112,33 +148,69 @@ h6 {
   font-family: "silkamedium", sans-serif;
   margin: 0 0 15px 0;
 }
+.text, 
+text {
+  font-family: "silkaregular", sans-serif;
+  margin: 0;
+  font-size: 12px;
+}
 $lightgrey: #ededed;
-$women: #b95f89;
-$men: #545677;
+$women: #bfd04d;
+$men: #084d71;
 $std1: #f09d51;
-$std2: #636b61;
-$std3: #77625c;
+$std2: #de74a5;
+$std3: #4dcdd0;
 //-----------------------
 .header {
+  position: fixed;
+  background-color: #fff;
+  width: 95%;
   display: flex;
+  justify-content: space-between;
   align-items: center;
   margin-bottom: 10px;
-  padding: 10px 50px;
+  padding: 0 50px;
+  box-shadow: 0px 0px 20px $lightgrey;
 
-  img {
-    width: 100px;
-    margin-right: 30px;
+.logo {
+    display: flex;
+    align-items: center;
+
+    img {
+      width: 80px;
+      margin-right: 30px;
+    }
+  }
+
+  .std-filter {
+    display: flex;
+
+    label {
+      display: flex;
+      align-items: center;
+      margin: 0 15px;
+      font-family: "silkamedium", sans-serif;
+      font-size: 18px;
+
+      input[type="radio"] {
+        width: 20px;
+        height: 20px;
+        margin-right: 10px;
+        margin-top: 0;
+      }
+    }
   }
 }
-
 section {
-  display: flex;
-  align-items: stretch;
-  flex-wrap: wrap;
-  margin: 0 40px;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  justify-items: stretch;
+  margin: 0 20px;
+  padding-top: 8rem;
 
   & > div {
-    margin: 15px;
+    margin: 10px;
     box-shadow: 0px 0px 60px $lightgrey;
     border-radius: 40px;
     padding: 35px;
@@ -153,31 +225,60 @@ section {
       margin-bottom: 5px;
     }
     p {
-      margin-bottom: 25px;
+      margin-bottom: 5px;
     }
   }
 
   .map-container {
     padding: 35px 30px 0 35px;
+    grid-column: 3/4;
+    grid-row: 1/2;
 
     #map {
       display: flex;
       justify-content: center;
     }
   }
+
   .line-container {
+    padding: 35px 30px;
+    grid-row: 1/2;
+    grid-column: 1/3;
+
+    .tooltip h3 {
+      margin: 0;
+    }
+
     #line {
       display: flex;
       justify-content: center;
     }
   }
+
   .bar-container {
+    padding: 35px 30px;
+    grid-column: 1/2;
+    grid-row: 2/3;
+
     #bar {
       display: flex;
       justify-content: center;
     }
   }
+
   .area-container {
+    padding: 35px 30px;
+    grid-row: 2/3;
+    grid-column: 2/4;
+
+    > h3 {
+      text-align: center;
+    }
+
+    .tooltip h3 {
+      margin: 0;
+    }
+
     #area {
       display: flex;
       justify-content: center;

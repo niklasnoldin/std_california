@@ -1,44 +1,50 @@
 <template>
   <div>
-    {{ text }}
-    <svg width="500" height="500" viewBox="0 0 500 500" id="bar">
-      <g transform="translate(60, 20)">
-        <rect
-          v-for="(disease, idx) in uniqueDiseases"
-          :key="'female_' + disease"
-          v-bind="{
-            height: scaleY(0) - femaleHeights[idx],
-            width: 100,
-            y: femaleHeights[idx],
-            x: scaleX(disease) - 50,
-          }"
-          fill="#BFD04D"
-          @mousemove="
-            text = `${disease}, Female, ${femalePerDisease[
-              idx
-            ].total.toLocaleString()}`
-          "
-        ></rect>
-        <rect
-          v-for="(disease, idx) in uniqueDiseases"
-          :key="'male_' + disease"
-          v-bind="{
-            height: scaleY(0) - maleHeights[idx],
-            width: 100,
-            y: maleHeights[idx] - (scaleY(0) - femaleHeights[idx]),
-            x: scaleX(disease) - 50,
-          }"
-          @mousemove="
-            text = `${disease}, Male, ${malePerDisease[
-              idx
-            ].total.toLocaleString()}`
-          "
-          fill="#084D71"
-        ></rect>
-      </g>
-      <g id="left-axis-bars" transform="translate(60, 20)"></g>
-      <g id="bottom-axis-bars" transform="translate(60, 420)"></g>
-    </svg>
+    <div id="bar" @mouseout="current = null">
+      <svg width="500" height="500" viewBox="-20 0 500 500" id="bar">
+        <g transform="translate(60, 20)">
+          <rect
+            v-for="(disease, idx) in uniqueDiseases"
+            :key="'female_' + disease"
+            :data-text="`${disease}: ${femalePerDisease[idx].total.toLocaleString()}`"
+            data-name="Female"
+            v-bind="{
+              height: scaleY(0) - femaleHeights[idx],
+              width: 100,
+              y: femaleHeights[idx],
+              x: scaleX(disease) - 50,
+            }"
+            fill="#BFD04D"
+            @mousemove="handleMouseOver"
+          ></rect>
+          <rect
+            v-for="(disease, idx) in uniqueDiseases"
+            :key="'male_' + disease"
+            :data-text="`${disease}: ${malePerDisease[idx].total.toLocaleString()}`"
+            data-name="Male"
+            v-bind="{
+              height: scaleY(0) - maleHeights[idx],
+              width: 100,
+              y: maleHeights[idx] - (scaleY(0) - femaleHeights[idx]),
+              x: scaleX(disease) - 50,
+            }"
+            @mousemove="handleMouseOver"
+            fill="#084D71"
+          ></rect>
+        </g>
+        <g id="left-axis-bars" transform="translate(60, 20)"></g>
+        <g id="bottom-axis-bars" transform="translate(60, 420)"></g>
+      </svg>
+    </div>
+        <div
+      id="map_tooltip"
+      class="tooltip"
+      v-if="current"
+      :style="{ top: current.top, left: current.left }"
+    >
+      <h3>{{ current.name }}</h3>
+      <p>{{ current.text }}</p>
+    </div>
     <div class="info">
       <h2>Total Number of Cases per STD</h2>
       <p>over a period of 18 years (2001 - 2018)</p>
@@ -54,7 +60,7 @@ export default {
     return {
       scaleY: null,
       scaleX: null,
-      text: "",
+      current: null,
     };
   },
   computed: {
@@ -120,6 +126,14 @@ export default {
     },
   },
   methods: {
+    handleMouseOver(event) {
+      this.current = {
+        left: event.pageX + "px",
+        top: event.pageY + "px",
+        name: event.target.dataset.name,
+        text: event.target.dataset.text
+      };
+    },
     initScales() {
       this.scaleX = d3
         .scaleOrdinal()
